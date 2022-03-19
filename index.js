@@ -1,10 +1,13 @@
 /* 
 การอัปเดตด็อกคิวเมนต์ (Update)
-- อัปเดตหลายด็อกคิวเมนต์ในครั้งเดียว
-รูปแบบ 
-db.collection_name.updateMany(filter, Update, Options)
+- แทนที่ด็อกคิวเมนต์เดียว
+ - รูปแบบ
+   db.collection_name.replaceOne(filter, replacement, options)
+   - replacement ฟิลด์และค่าที่ต้องการกำหนดแทนที่ลงในด็อกคิวเมนต์
 */
-db.product.updateMany({ cat: "office" }, { $set: { cat: "msoffice" } });
 
-// เมื่อเรียกดูด็อกคิวเมนต์ด้วยเมธอด find() จะเห็นค่าในฟิลด์ cat เปลี่ยนใหม่
-// ฟิลด์ cat ในด็อกคิวเมนต์ที่เลือกทั้งหมดเปลี่ยนค่าเป็น msOffice
+// แทนที่ด๊อกคิวเมนต์ที่ชื่อ Puri
+db.writer.replaceOne(
+  { name: "Puri" },
+  { name: "Puri", field: "Programming", phone: "089432423432" }
+);
