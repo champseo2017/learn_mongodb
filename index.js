@@ -1,13 +1,10 @@
 /* 
-การอัปเดตด็อกคิวเมนต์ (Update)
-- แทนที่ด็อกคิวเมนต์เดียว
- - รูปแบบ
-   db.collection_name.replaceOne(filter, replacement, options)
-   - replacement ฟิลด์และค่าที่ต้องการกำหนดแทนที่ลงในด็อกคิวเมนต์
+การลบด็อกคิวเมนต์ (Delete)
+ - deleteOne()
+ - deleteMany()
+รูปแบบ
+ - db.collection_name.deleteOne(filter)
 */
 
-// แทนที่ด๊อกคิวเมนต์ที่ชื่อ Puri
-db.writer.replaceOne(
-  { name: "Puri" },
-  { name: "Puri", field: "Programming", phone: "089432423432" }
-);
+// เช่น เราจะลบ doc ข้อมูลผู้เขียนที่ฟิลด์ name ชื่อ "Puri" โดยใช้เมธอด deleteOne()
+db.writer.deleteOne({ name: "Puri" });
