@@ -1,69 +1,21 @@
 /* 
 
 โมเดลโครงสร้างต้นไม้
-books
-office = books
-graphic = books
-programming = books
 
-
-publishing = graphic
-multimedia = graphic
-
-photoshop = publishing
-illustrator = publishing
-indesign = publishing
-
-โหนดบนสุด คือ books
- - id ของโหนดพ่อแม่อยู่ใน field cat
+การอ้างอิงด้วยลูก (Child References)
+ - เพิ่มด๊อกคิวเมนต์ในคอลเล็กชัน books โดยอ้างอิงโหนดลูกที่อยู่ภายใต้โหนดแม่ในฟิลด์ child
 
 */
+db.books.update(
+  { _id: "indesign" },
+  { $set: { child: [] } }
+);
 
-db.books.insertMany([
-  {
-    _id: "books",
-    cat: null,
-  },
-  {
-    _id: "office",
-    cat: "books",
-  },
-  {
-    _id: "graphic",
-    cat: "books",
-  },
-  {
-    _id: "programming",
-    cat: "books",
-  },
-  {
-    _id: "publishing",
-    cat: "graphic",
-  },
-  {
-    _id: "multimedia",
-    cat: "graphic",
-  },
-  {
-    _id: "photoshop",
-    cat: "publishing",
-  },
-  {
-    _id: "illustrator",
-    cat: "publishing",
-  },
-  {
-    _id: "indesign",
-    cat: "publishing",
-  },
-]);
+// สืบค้นเพื่อดูข้อมูลของลูกที่อยู่ภายใต้โหนดพ่อแม่ เช่น
+db.books.findOne({_id: "publishing"}).child
 
-// เราสามารถสืบค้นเพื่อดึงข้อมูลพ่อแม่ของลูกได้โดยตรง
-db.books.findOne({ _id: "photoshop" }).cat;
+// เราสามารถกำหนดให้ฟิลด์ child เป็นอินเด็กซ์ที่ใช้อ้างอิงข้อมูลโดยกำหนดค่าเป็น 1 ซึ้งจะช่วยให้ค้นหาข้อมูลด้วยโหนดลูกได้เร็วขึ้น
+db.books.createIndex({ child: 1 })
 
-// กำหนดค่าให้ฟิลด์ cat เป็นอินเด็กซ์ที่ใช้อ้างอิงข้อมูล ช่วยให้ค้นหาข้อมูลด้วยโหนดพ่อแม่ได้เร็วขึ้น
-db.books.createIndex({ cat: 1 })
-
-// สืบค้นด็อกคิวเมนต์ลูกๆ ที่อยู่ภายใต้โหนดพ่อแม่ในฟิลด์ cat ได้อย่างรวดเร็ว
-// เช่น สืบค้นรายการหนังสือที่อยู่ในหมวด publishing ดังนี้
-db.books.find({ cat: "publishing" })
+// สืบค้นด๊อกคิวเมนต์พ่อแม่ที่อ้างอิงโหนดลูกในฟิลด์ child
+db.books.find({ child: "photoshop" })
