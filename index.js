@@ -1,17 +1,69 @@
 /* 
 
-การอ้างอิงข้อมูลแบบ One-to-many
-  - เราควรเก็บ id อ้างอิงข้อมูลที่มีจำนวนน้อยกว่าอยู่ใน ด็อกคิวเมนต์ของข้อมูลที่มีจำนวนมากกว่า
+โมเดลโครงสร้างต้นไม้
+books
+office = books
+graphic = books
+programming = books
 
-  เช่น
-  ข้อมูลสินค้าหนังสือจะเพิ่มขึ้นเรื่อยๆ ส่วนข้อมูลของผู้จัดจำหน่าย distributor จะคงที่หรือมีน้อย ดังนั้นเมื่อเราแยกเก็บข้อมูลต่างคอลเล็กชันกัน ก็จะอ้างอิง distributor อยู่ใน product
 
-  กลับกัน หากเราเก็บ id ข้อมูลที่มีปริมาณมาก อยู่ในข้อมูลที่มีปริมาณน้อย จะมีผลที่ทำให้เราใช้ array ที่ไม่แน่นอนเพราะจะมีค่าเพิ่มขึ้นเรื่อยๆ 
-  
-  เช่น
-  เรานำ id ของหนังสือที่สามารถเพิ่มได้ไม่จำกัดนำมาอยู่ใน collections ของผู้จัดจำหน่าย
-  books: [12222, 122111]
+publishing = graphic
+multimedia = graphic
 
+photoshop = publishing
+illustrator = publishing
+indesign = publishing
+
+โหนดบนสุด คือ books
+ - id ของโหนดพ่อแม่อยู่ใน field cat
 
 */
 
+db.books.insertMany([
+  {
+    _id: "books",
+    cat: null,
+  },
+  {
+    _id: "office",
+    cat: "books",
+  },
+  {
+    _id: "graphic",
+    cat: "books",
+  },
+  {
+    _id: "programming",
+    cat: "books",
+  },
+  {
+    _id: "publishing",
+    cat: "graphic",
+  },
+  {
+    _id: "multimedia",
+    cat: "graphic",
+  },
+  {
+    _id: "photoshop",
+    cat: "publishing",
+  },
+  {
+    _id: "illustrator",
+    cat: "publishing",
+  },
+  {
+    _id: "indesign",
+    cat: "publishing",
+  },
+]);
+
+// เราสามารถสืบค้นเพื่อดึงข้อมูลพ่อแม่ของลูกได้โดยตรง
+db.books.findOne({ _id: "photoshop" }).cat;
+
+// กำหนดค่าให้ฟิลด์ cat เป็นอินเด็กซ์ที่ใช้อ้างอิงข้อมูล ช่วยให้ค้นหาข้อมูลด้วยโหนดพ่อแม่ได้เร็วขึ้น
+db.books.createIndex({ cat: 1 })
+
+// สืบค้นด็อกคิวเมนต์ลูกๆ ที่อยู่ภายใต้โหนดพ่อแม่ในฟิลด์ cat ได้อย่างรวดเร็ว
+// เช่น สืบค้นรายการหนังสือที่อยู่ในหมวด publishing ดังนี้
+db.books.find({ cat: "publishing" })
