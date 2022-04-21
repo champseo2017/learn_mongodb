@@ -1,5 +1,5 @@
 /* 
-ประเภทของอินเด็กซ์ใน MongoDB
+
 
 MongoDB
 จัดให้มีอินเด็กซ์ไว้หลายประเภทที่แตกต่างกันเพื่อสนับสนุนเฉพาะชนิดข้อมูลและการสืบค้นแบบ
@@ -9,26 +9,26 @@ MongoDB
 
 /* 
 
-อินเด็กซ์ที่ไม่ซ้ำกัน (Unique Indexes)
-ฟิลด์ที่จัดทำอินเด็กซ์จะไม่จัดเก็บค่าที่ซ้ำ
+อินเด็กซ์บางส่วน (Partial Indexes)
+
+เป็นอินเด็กซ์เฉพาะสำหรับด็อกคิวเมนต์ในคอลเล็กชันที่ตรงกับการกลั่นกรองด้วยนิพจน์
 
 รูปแบบ
-db.collection.createIndex(<key: index type>, { unique: true })
-
+db.collection.createIndex(<key : index type>, {
+  partialFilterExpression: { นิพจน์ }
+})
 
 */
 
-// ตัวอย่างบนฟิลด์เดียว ต้องการกำหนดคุณสมบัติอินเด็กซ์ที่ไม่ซ้ำกันบนฟิลด์ name ของ
-// คอลเล็กชัน customer
-db.customer.createIndex({ name: 1 }, { unique: true });
+// ตัวอย่าง เราต้องการกำหนดคุณสมบัติอินเด็กซ์บางส่วนสำหรับอินเด็กซ์บนฟิลด์ prodName โดยกลั่นกรองเฉพาะด็อกคิวเมนต์ที่ฟิลด์ sales มียอดขายมากกว่า 1500 
 
-// อินเด็กซ์ที่ไม่ซ้ำกันให้กับอินเด็กซ์ผสม {name: 1, age: -1}
-db.customer.createIndex(
+db.sales.createIndex(
+  { prodName: 1 },
   {
-    name: 1,
-    age: -1,
-  },
-  {
-    unique: true,
+    partialFilterExpression: {
+      sales: {
+        $gt: 1500
+      }
+    }
   }
-);
+)
