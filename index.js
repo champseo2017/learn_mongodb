@@ -4,29 +4,58 @@ QueryBuilder
 
 */
 
-User.find({ 'name': 'Simon Holmes' })
-.wher('age').gt(18)
-.sort('-lastLogin')
-.select('_id name email')
-.exec((err, users) => {
-  if (!err) {
-    console.log(users) // output array of users found
-  }
-})
-
 /* 
 
-Or we can create a combination of the previous two:
+Single query operation
+
+Model.find(conditions, [fields], [options], [callback])
 
 */
 
-const myQuery = User.find({'name' : 'Simon Holmes'})
-.where('age').gt(18)
-.sort('-lastLogin')
-.select('_id name email')
-
-myQuery.exec((err, users) => {
-  if (!err) {
-    console.log(users) // output array of users found
+User.find(
+  {
+    'name' : 'Simon Holmes'
+  },
+  (err, users) => {
+    if (!err) {
+      console.log(users)
+    }
   }
-})
+)
+
+/* 
+
+returned specifying which fields
+
+*/
+User.find(
+  {
+    'name': 'Simon Holmes'
+  },
+  (err, users) => {
+    if (!err) {
+      console.log(users)
+    }
+  }
+)
+
+/* 
+
+options to specify a sort order
+
+*/
+User.find(
+  {
+    'name': 'Simon Holmes'
+  },
+  {
+    sort: {
+      lastLogin: -1
+    }
+  },
+  (err, users) => {
+    if (!err) {
+      console.log(users)
+    }
+  }
+)
