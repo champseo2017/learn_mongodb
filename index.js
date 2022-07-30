@@ -1,45 +1,32 @@
 /* 
 
-
-MongoDB
-จัดให้มีอินเด็กซ์ไว้หลายประเภทที่แตกต่างกันเพื่อสนับสนุนเฉพาะชนิดข้อมูลและการสืบค้นแบบ
-ต่างๆ
+QueryBuilder
 
 */
+
+User.find({ 'name': 'Simon Holmes' })
+.wher('age').gt(18)
+.sort('-lastLogin')
+.select('_id name email')
+.exec((err, users) => {
+  if (!err) {
+    console.log(users) // output array of users found
+  }
+})
 
 /* 
-  อินเด็กซ์กระจัดกระจาย (Sparse Indexes)
-  
-  เป็นคุณสมบัติที่กำหนดให้อินเด็กซ์มีการเข้าถึงได้เฉพาะด็อกคิวเมนต์ที่มีฟิลด์จัดทำอินเด็กซ์ประกอบอยู่เท่านั้น โดยอินเด็กซ์จะข้ามด็อกคิวเมนต์ใดๆ ที่ไม่มีฟิลด์จัดทำอินเด็กซ์
 
-  รูปแบบ
-
-  db.collection.createIndex(<key: index type>, { sparse: true })
+Or we can create a combination of the previous two:
 
 */
 
-// ให้สร้างอินเด็กซ์บนฟิลด์ age และกำหนดคุณสมบัติอินเด็กซ์กระจัดกระจายเฉพาะสำหรับด็อกคิวเมนต์ที่มีฟิลด์จัดทำอินเด็กซ์
+const myQuery = User.find({'name' : 'Simon Holmes'})
+.where('age').gt(18)
+.sort('-lastLogin')
+.select('_id name email')
 
-db.products.createIndex({ age: 1 }, { sparse: true });
-
-db.products.insertMany([
-  {
-    name: "Sira",
-    age: 50,
-  },
-  {
-    name: "Nana",
-    age: 45,
-  },
-]);
-
-// เรียกดู index
-db.products.getIndexes()
-
-// จากนั้นให้สืบค้นด็อกคิวเมนต์ที่มี age น้อยกว่า 50 ในคอลเล็กชัน products โดย
-// ใช้คุณสมบัติอินเด็กซ์กระจัดกระจาย
-
-db.products.find({ age: { $lt: 50 }})
-// $lt มีค่าน้อยกว่า 50
-
-// เนื่องจากด็อกคิวเมนต์ที่ชื่อว่า Seri ไม่ได้อยู่ในเงื่อนไขของการสืบค้น ผลลัพธ์ที่ได้จึงมีเฉพาะด็อกคิวเมนต์ที่ชื่อว่า Nana ที่สำคัญคุณสมบัติอินเด็กซ์กระจัดกระจายจะไม่เข้าถึงด็อกคิเมนต์ชื่อ Seri จึงทำให้การสืบค้นมีประสิทธิภาพและรวดเร็วขึ้น
+myQuery.exec((err, users) => {
+  if (!err) {
+    console.log(users) // output array of users found
+  }
+})
